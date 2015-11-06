@@ -1,5 +1,5 @@
 apply plugin: 'com.android.application'
-
+apply plugin: 'findbugs'
 android {
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
@@ -15,6 +15,24 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+task findbugs(type: FindBugs) {
+    ignoreFailures = true
+    source = fileTree('src/main/java/')
+    classes = fileTree('build/intermediates/classes/debug/mikolajgrygiel/jedzmyrazem/')
+    classpath = files()
+    effort = 'max'
+    reports {
+        xml.enabled = true
+        html.enabled = false
+        xml {
+            destination "$project.buildDir/outputs/findbugs/findbugs.xml"
+        }
+        html {
+            destination "$project.buildDir/outputs/findbugs/findbugs.html"
         }
     }
 }
