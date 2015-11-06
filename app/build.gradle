@@ -25,6 +25,7 @@ task findbugs(type: FindBugs) {
     classes = fileTree('build/intermediates/classes/debug/mikolajgrygiel/jedzmyrazem/')
     classpath = files()
     effort = 'max'
+    excludeFilter = file("./config/findbugs/exclude.xml")
     reports {
         xml.enabled = true
         html.enabled = false
