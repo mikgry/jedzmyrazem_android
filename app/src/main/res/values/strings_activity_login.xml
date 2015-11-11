@@ -1,0 +1,14 @@
+<resources>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Hasło</string>
+    <string name="action_sign_in">Zaloguj się</string>
+    <string name="action_sign_in_short">Zaloguj</string>
+
+    <string name="error_invalid_email">Adres email jest niepoprawny</string>
+    <string name="error_invalid_password">Hasło jest za krótkie, minimum 8 znaków</string>
+    <string name="error_incorrect_password">Hasło jest niepoprawne</string>
+    <string name="error_field_required">To pole jest wymagane</string>
+</resources>
