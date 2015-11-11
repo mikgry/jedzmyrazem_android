@@ -4,7 +4,8 @@ package mikolajgrygiel.jedzmyrazem.enums;
  * Created by Mikolaj on 2015-11-11.
  */
 public enum RestApiUrl {
-    SIGN_IN("users/sign_in.json");
+    SIGN_IN("users/sign_in.json"),
+    SIGN_UP("users.json");
 
     private final String url;
     private final String BASE_URL = "http://www.jedzmyrazem.pl/";

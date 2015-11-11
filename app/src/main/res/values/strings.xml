@@ -3,4 +3,21 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_registration">RegistrationActivity</string>
+    <string name="register_hint_username">Nazwa użytkownika</string>
+    <string name="register_hint_phone">Numer telefonu</string>
+    <string name="register_hint_confirmpassword">Potwierdź hasło</string>
+    <string name="register_btn_register">Utwórz konto</string>
+    <string name="register_registeredOk">Zarejestrowano pomyślnie.</string>
+    <string name="register_registeredNotOk">Błąd podczas rejestracji. Spróbuj ponownie lub zarejestruj się na www.jedzmyrazem.pl</string>
+
+    // Register activity - validation errors
+    <string name="registrationValidation_loginEmpty">Login jest wymagany!</string>
+    <string name="registrationValidation_emailEmpty">Email jest wymagany!</string>
+    <string name="registrationValidation_passwordEmpty">Hasło jest wymagane!</string>
+    <string name="registrationValidation_passwordConfirmationEmpty">Potwierdzenie hasła jest wymagane!</string>
+    <string name="registrationValidation_passwordsNotTheSame">Hasła różnią się.</string>
+    <string name="registrationValidation_emailFormatIncorrect">Email został podany w niepoprawnym formacie. Powinien być: name@example.com</string>
+    <string name="registrationValidation_passwordAtLeastThreeDigits">Hasło musi zawierać co najmniej 3 cyfry..</string>
+    <string name="registrationValidation_passwordAtLeastEightCharacters">Hasło musi skadać się z co najmniej 8 znaków.</string>
 </resources>

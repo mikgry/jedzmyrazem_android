@@ -5,7 +5,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="mikolajgrygiel.jedzmyrazem.LoginActivity">
+    tools:context="mikolajgrygiel.jedzmyrazem.RegistrationActivity">
 
     <!-- Login progress -->
     <ProgressBar android:id="@+id/login_progress" style="?android:attr/progressBarStyleLarge"
@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <AutoCompleteTextView android:id="@+id/email"
+            <AutoCompleteTextView android:id="@+id/txtEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_email"
@@ -28,7 +28,23 @@
                 android:maxLines="1"
                 android:singleLine="true" />
 
-            <EditText android:id="@+id/password"
+            <AutoCompleteTextView android:id="@+id/txtUsername"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_hint_username"
+                android:inputType="textPersonName"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <AutoCompleteTextView android:id="@+id/txtPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/register_hint_phone"
+                android:inputType="phone"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText android:id="@+id/txtPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_password"
@@ -39,13 +55,16 @@
                 android:maxLines="1"
                 android:singleLine="true" />
 
-            <Button android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
+            <EditText android:id="@+id/txtPasswordConfirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold" />
+                android:hint="@string/register_hint_confirmpassword"
+                android:imeActionId="@+id/login"
+                android:imeActionLabel="@string/register_hint_confirmpassword"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:singleLine="true" />
 
             <Button android:id="@+id/btnRegister"
                 style="?android:textAppearanceSmall"
@@ -55,8 +74,15 @@
                 android:text="@string/register_btn_register"
                 android:textStyle="bold" />
 
+            <Button android:id="@+id/btnLogin"
+                style="?android:textAppearanceSmall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/action_sign_in"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </ScrollView>
 
 </LinearLayout>
-
