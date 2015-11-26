@@ -336,7 +336,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
         }
     }
-    public static DefaultHttpClient httpClient = new DefaultHttpClient();
-    public static ServiceHandler sh = new ServiceHandler();
+    public final static DefaultHttpClient httpClient = new DefaultHttpClient();
+    public final static ServiceHandler sh = new ServiceHandler();
 }
 
