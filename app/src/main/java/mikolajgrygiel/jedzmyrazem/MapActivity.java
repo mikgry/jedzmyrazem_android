@@ -3,6 +3,7 @@ package mikolajgrygiel.jedzmyrazem;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
@@ -203,5 +204,11 @@ public class MapActivity extends AppCompatActivity implements
 
     private void showTime(int hour, int minute) {
         mTextViewTime.setText(String.format("%02d:%02d", hour, minute));
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        finish();
     }
 }

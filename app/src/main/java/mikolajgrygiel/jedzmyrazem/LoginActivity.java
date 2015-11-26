@@ -27,6 +27,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.content.SharedPreferences;
 
 import com.loopj.android.http.PersistentCookieStore;
 
@@ -36,6 +37,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+
 
 import mikolajgrygiel.jedzmyrazem.enums.RestApiUrl;
 
@@ -65,11 +68,25 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
     // Cookie store - for maintain session between app launching
     PersistentCookieStore cookieStore;
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        pref = getSharedPreferences("userdetails", MODE_PRIVATE);
+        editor = pref.edit();
+
+        String getStatus = pref.getString("logged", "");
+        if(getStatus.equals("true")){
+            Intent intent = new Intent(this, MapActivity.class);
+            startActivity(intent);
+        }
+
         setContentView(R.layout.activity_login);
+
+
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
@@ -323,6 +340,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
+                editor.putString("logged", "true");
+                editor.commit();
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
