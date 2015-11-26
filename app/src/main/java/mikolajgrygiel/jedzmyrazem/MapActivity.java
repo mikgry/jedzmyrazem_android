@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.format.DateFormat;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,16 +37,17 @@ public class MapActivity extends AppCompatActivity implements
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private AutoCompleteTextView mAutocompleteTextViewSrc;
     private AutoCompleteTextView mAutocompleteTextViewDst;
+    private TextView mTextViewDate;
+    private TextView mTextViewTime;
     private TextView mAttTextView;
     private GoogleApiClient mGoogleApiClient;
     private PlaceArrayAdapter mPlaceArrayAdapter;
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
             new LatLng(51.043317, 16.803714), new LatLng(51.219122, 17.199909));
 
-    private DatePicker datePicker;
     private Calendar calendar;
-    private TextView dateView;
     private int year, month, day;
+    private int hour, minute;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +79,19 @@ public class MapActivity extends AppCompatActivity implements
 
         calendar = Calendar.getInstance();
         year = calendar.get(Calendar.YEAR);
-
         month = calendar.get(Calendar.MONTH);
         day = calendar.get(Calendar.DAY_OF_MONTH);
+        minute = calendar.get(Calendar.MINUTE);
+        hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        mTextViewDate = (TextView) findViewById(R.id
+                .textViewDate);
+        showDate(year, month, day);
+
+        mTextViewTime = (TextView) findViewById(R.id
+                .textViewTime);
+        showTime(hour, minute);
+
     }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListener
@@ -160,7 +172,7 @@ public class MapActivity extends AppCompatActivity implements
             return new DatePickerDialog(this, myDateListener, year, month, day);
         }
         else if (id == 1000) {
-            return new TimePickerDialog(this, mTimeSetListener, year, year,
+            return new TimePickerDialog(this, mTimeSetListener, hour, minute,
                     DateFormat.is24HourFormat(this));
         }
         return null;
@@ -180,13 +192,16 @@ public class MapActivity extends AppCompatActivity implements
     private TimePickerDialog.OnTimeSetListener mTimeSetListener =
             new TimePickerDialog.OnTimeSetListener() {
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-
+                    showTime(hourOfDay, minute);
 
                 }
             };
 
     private void showDate(int year, int month, int day) {
-        dateView.setText(new StringBuilder().append(day).append("/")
-                .append(month).append("/").append(year));
+        mTextViewDate.setText(String.format("%02d.%02d.%04d", day, month, year));
+    }
+
+    private void showTime(int hour, int minute) {
+        mTextViewTime.setText(String.format("%02d:%02d", hour, minute));
     }
 }
