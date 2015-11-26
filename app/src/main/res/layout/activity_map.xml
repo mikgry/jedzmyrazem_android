@@ -25,6 +25,21 @@
         android:hint="Cel podróży"
         android:layout_below="@+id/autoCompleteTextViewSrc"/>
 
+    <Button
+        android:id="@+id/buttonDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="setDate"
+        android:text="Ustaw date"
+        android:layout_below="@+id/autoCompleteTextViewDst"/>
+
+    <Button
+        android:id="@+id/buttonTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="setTime"
+        android:text="Ustaw czas"
+        android:layout_below="@+id/buttonDate"/>
 
 
     <TextView
