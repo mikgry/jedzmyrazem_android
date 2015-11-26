@@ -3,12 +3,10 @@ package mikolajgrygiel.jedzmyrazem;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
 import android.text.format.DateFormat;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -28,7 +26,12 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Calendar;
+
+import mikolajgrygiel.jedzmyrazem.enums.RestApiUrl;
 
 
 public class MapActivity extends AppCompatActivity implements
@@ -43,6 +46,7 @@ public class MapActivity extends AppCompatActivity implements
     private TextView mAttTextView;
     private GoogleApiClient mGoogleApiClient;
     private PlaceArrayAdapter mPlaceArrayAdapter;
+    private LatLng start_location, finish_location;
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
             new LatLng(51.043317, 16.803714), new LatLng(51.219122, 17.199909));
 
@@ -64,17 +68,18 @@ public class MapActivity extends AppCompatActivity implements
         mAutocompleteTextViewSrc.setThreshold(3);
 
         mAttTextView = (TextView) findViewById(R.id.att);
-        mAutocompleteTextViewSrc.setOnItemClickListener(mAutocompleteClickListener);
+        mAutocompleteTextViewSrc.setOnItemClickListener(mAutocompleteClickListenerStart);
 
         mAutocompleteTextViewDst = (AutoCompleteTextView) findViewById(R.id
                 .autoCompleteTextViewDst);
         mAutocompleteTextViewDst.setThreshold(3);
 
         mAttTextView = (TextView) findViewById(R.id.att);
-        mAutocompleteTextViewDst.setOnItemClickListener(mAutocompleteClickListener);
+        mAutocompleteTextViewDst.setOnItemClickListener(mAutocompleteClickListenerFinish);
 
         mPlaceArrayAdapter = new PlaceArrayAdapter(this, android.R.layout.simple_list_item_1,
                 BOUNDS_MOUNTAIN_VIEW, null);
+
         mAutocompleteTextViewSrc.setAdapter(mPlaceArrayAdapter);
         mAutocompleteTextViewDst.setAdapter(mPlaceArrayAdapter);
 
@@ -95,37 +100,60 @@ public class MapActivity extends AppCompatActivity implements
 
     }
 
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
+    private AdapterView.OnItemClickListener mAutocompleteClickListenerStart
             = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
             final String placeId = String.valueOf(item.placeId);
-            Log.i(LOG_TAG, "Selected: " + item.description);
+
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
                     .getPlaceById(mGoogleApiClient, placeId);
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-            Log.i(LOG_TAG, "Fetching details for ID: " + item.placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallbackStart);
         }
+
+        private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallbackStart
+                = new ResultCallback<PlaceBuffer>() {
+            @Override
+            public void onResult(PlaceBuffer places) {
+                if (!places.getStatus().isSuccess()) {
+                    Log.e(LOG_TAG, "Place query did not complete. Error: " +
+                            places.getStatus().toString());
+                    return;
+                }
+                // Selecting the first object buffer.
+                final Place place = places.get(0);
+                start_location = place.getLatLng();
+            }
+        };
     };
 
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
+    private AdapterView.OnItemClickListener mAutocompleteClickListenerFinish
+            = new AdapterView.OnItemClickListener() {
         @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                Log.e(LOG_TAG, "Place query did not complete. Error: " +
-                        places.getStatus().toString());
-                return;
-            }
-            // Selecting the first object buffer.
-            //final Place place = places.get(0);
-            CharSequence attributions = places.getAttributions();
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
+            final String placeId = String.valueOf(item.placeId);
 
-            if (attributions != null) {
-                mAttTextView.setText(Html.fromHtml(attributions.toString()));
-            }
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
+                    .getPlaceById(mGoogleApiClient, placeId);
+            placeResult.setResultCallback(mUpdatePlaceDetailsCallbackFinish);
         }
+
+        private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallbackFinish
+                = new ResultCallback<PlaceBuffer>() {
+            @Override
+            public void onResult(PlaceBuffer places) {
+                if (!places.getStatus().isSuccess()) {
+                    Log.e(LOG_TAG, "Place query did not complete. Error: " +
+                            places.getStatus().toString());
+                    return;
+                }
+                // Selecting the first object buffer.
+                final Place place = places.get(0);
+                finish_location = place.getLatLng();
+            }
+        };
     };
 
     @Override
@@ -155,15 +183,11 @@ public class MapActivity extends AppCompatActivity implements
     @SuppressWarnings("deprecation")
     public void setDate(View view) {
         showDialog(999);
-        Toast.makeText(getApplicationContext(), "ca", Toast.LENGTH_SHORT)
-                .show();
     }
 
     @SuppressWarnings("deprecation")
     public void setTime(View view) {
         showDialog(1000);
-        Toast.makeText(getApplicationContext(), "ca", Toast.LENGTH_SHORT)
-                .show();
     }
 
     @Override
@@ -199,7 +223,7 @@ public class MapActivity extends AppCompatActivity implements
             };
 
     private void showDate(int year, int month, int day) {
-        mTextViewDate.setText(String.format("%02d.%02d.%04d", day, month, year));
+        mTextViewDate.setText(String.format("%04d-%02d-%02d", year, month, day));
     }
 
     private void showTime(int hour, int minute) {
@@ -210,5 +234,33 @@ public class MapActivity extends AppCompatActivity implements
     public void onBackPressed()
     {
         finish();
+    }
+
+    public void search(View view)
+    {
+        SearchTask st = new SearchTask();
+        st.execute();
+    }
+
+    private class SearchTask extends AsyncTask<Void, Double, Void> {
+        @Override
+        protected Void doInBackground(Void... params) {
+            JSONObject json = new JSONObject();
+            JSONObject paramsJson = new JSONObject();
+            try {
+                paramsJson.put("date", mTextViewDate.getText());
+                paramsJson.put("start_time", mTextViewTime.getText());
+                paramsJson.put("start_lat", start_location.latitude);
+                paramsJson.put("start_lng", start_location.longitude);
+                paramsJson.put("finish_lat", finish_location.latitude);
+                paramsJson.put("finish_lng", finish_location.longitude);
+                json.put("params", paramsJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            ServiceHandler sh = new ServiceHandler();
+            String jsonStr = sh.makeServiceCall(RestApiUrl.SEARCH.getUrl(), ServiceHandler.POST, json);
+            return null;
+        }
     }
 }
