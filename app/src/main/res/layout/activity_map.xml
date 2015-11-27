@@ -39,11 +39,11 @@
         android:id="@+id/textViewTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:textSize="24dp"
         android:onClick="setTime"
         android:clickable="true"
-        android:layout_below="@+id/autoCompleteTextViewDst"/>
+        android:layout_below="@+id/autoCompleteTextViewDst"
+        android:layout_alignRight="@+id/buttonSearch" />
 
     <Button
         android:id="@+id/buttonSearch"
@@ -69,9 +69,24 @@
         android:id="@+id/poweredBy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/att"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:src="@drawable/powered_by_google_light"/>
+        android:src="@drawable/powered_by_google_light"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/scrollView"
+        android:layout_alignEnd="@+id/scrollView" />
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/buttonSearch"
+        android:foregroundGravity="left"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/linearLayout"/>
+    </ScrollView>
 
 </RelativeLayout>

@@ -12,6 +12,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -26,10 +29,14 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import mikolajgrygiel.jedzmyrazem.enums.RestApiUrl;
 
@@ -41,6 +48,7 @@ public class MapActivity extends AppCompatActivity implements
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private AutoCompleteTextView mAutocompleteTextViewSrc;
     private AutoCompleteTextView mAutocompleteTextViewDst;
+    private ScrollView mScrollView;
     private TextView mTextViewDate;
     private TextView mTextViewTime;
     private TextView mAttTextView;
@@ -98,6 +106,7 @@ public class MapActivity extends AppCompatActivity implements
                 .textViewTime);
         showTime(hour, minute);
 
+        mScrollView = (ScrollView) findViewById(R.id.scrollView);
     }
 
     private AdapterView.OnItemClickListener mAutocompleteClickListenerStart
@@ -242,9 +251,9 @@ public class MapActivity extends AppCompatActivity implements
         st.execute();
     }
 
-    private class SearchTask extends AsyncTask<Void, Double, Void> {
+    private class SearchTask extends AsyncTask<String, String, String> {
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(String... params) {
             JSONObject json = new JSONObject();
             JSONObject paramsJson = new JSONObject();
             try {
@@ -260,7 +269,55 @@ public class MapActivity extends AppCompatActivity implements
             }
             ServiceHandler sh = new ServiceHandler();
             String jsonStr = sh.makeServiceCall(RestApiUrl.SEARCH.getUrl(), ServiceHandler.POST, json);
-            return null;
+
+            return jsonStr;
+        }
+        protected void onPostExecute(String result)
+        {
+
+            try {
+                JSONObject jsonObject = new JSONObject(result);
+                JSONArray jsonArray = jsonObject.getJSONArray("journey");
+
+                LinearLayout item = (LinearLayout)findViewById(R.id.linearLayout);
+                item.removeAllViews();
+                View child;
+                String startTime="", finishTime="";
+                Date date;
+                for(int i=0; i<jsonArray.length(); i++){
+                    JSONArray journey = jsonArray.getJSONArray(i);
+                    JSONObject start = journey.getJSONObject(0).getJSONArray("waypoints").getJSONObject(0);
+                    JSONObject finish = journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").getJSONObject(journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").length()-1);
+
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                    try {
+
+                        date = sdf.parse(start.getString("time"));
+                        startTime = new SimpleDateFormat("HH:mm").format(date);
+
+                        date = sdf.parse(finish.getString("time"));
+                        finishTime = new SimpleDateFormat("HH:mm").format(date);
+
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+                    child = getLayoutInflater().inflate(R.layout.journey, null);
+                    ((TextView)child.findViewById(R.id.textViewPassesCount)).setText(Integer.toString(journey.length()-1));
+                    ((TextView)child.findViewById(R.id.textViewStartPlace)).setText(start.getString("name"));
+                    ((TextView)child.findViewById(R.id.textViewFinishPlace)).setText(finish.getString("name"));
+
+                    ((TextView)child.findViewById(R.id.textViewStartTime)).setText(startTime);
+                    ((TextView)child.findViewById(R.id.textViewFinishTime)).setText(finishTime);
+                    item.addView(child);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
         }
     }
 }

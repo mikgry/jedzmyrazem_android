@@ -16,8 +16,10 @@ import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
 
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class PlaceArrayAdapter
@@ -85,10 +87,18 @@ public class PlaceArrayAdapter
                     + " predictions.");
             Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
             ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
+            Collator plCollator = Collator.getInstance(new Locale("pl", "PL"));
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
-                resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
-                        prediction.getDescription()));
+                String[] place_split =  prediction.getDescription().split(",");
+                int a = plCollator.compare(place_split[place_split.length - 2].trim(), "Wroc³aw");
+                int b = plCollator.compare(place_split[place_split.length - 2], " Wroc³aw");
+                if(plCollator.compare(place_split[place_split.length - 2].trim(), "Wroc³aw") == 1)
+                {
+                    resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
+                            place_split[0]));
+                }
+
             }
             // Buffer release
             autocompletePredictions.release();
