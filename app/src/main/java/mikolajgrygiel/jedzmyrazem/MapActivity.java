@@ -5,6 +5,9 @@ import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -61,6 +64,8 @@ public class MapActivity extends AppCompatActivity implements
     private LatLng start_location, finish_location;
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
             new LatLng(51.043317, 16.803714), new LatLng(51.219122, 17.199909));
+    private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1; // 1 minute
 
     private Calendar calendar;
     private int year, month, day;
@@ -69,6 +74,9 @@ public class MapActivity extends AppCompatActivity implements
     private ArrayList<Parent> parents;
     ExpandableListAdapter listAdapter;
     ExpandableListView expListView;
+    protected LocationManager locationManager;
+    private AppCompatActivity activity;
+    GPSTracker gps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,9 +130,11 @@ public class MapActivity extends AppCompatActivity implements
         listAdapter = new MyExpandableListAdapter(this, parents, getApplicationContext());
         expListView.setAdapter(listAdapter);
 
-        //Creating static data in arraylist
+        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
 
-
+        activity = this;
+        start_location = null;
+        gps = new GPSTracker(activity);
     }
 
     private ArrayList<Parent> buildDummyData()
@@ -313,8 +323,40 @@ public class MapActivity extends AppCompatActivity implements
             try {
                 paramsJson.put("date", mTextViewDate.getText());
                 paramsJson.put("start_time", mTextViewTime.getText());
-                paramsJson.put("start_lat", start_location.latitude);
-                paramsJson.put("start_lng", start_location.longitude);
+                if(start_location == null) {
+                    gps.getLocation();
+                    if (gps.isGPSEnabled) {
+
+                        paramsJson.put("start_lat", gps.getLatitude());
+                        paramsJson.put("start_lng", gps.getLongitude());
+
+                    } else {
+
+                        activity.runOnUiThread(new Runnable() {
+                            public void run() {
+                                gps.showSettingsAlert();
+                            }
+                        });
+                        return null;
+                    }
+                }
+                else
+                {
+                    paramsJson.put("start_lat", start_location.latitude);
+                    paramsJson.put("start_lng", start_location.longitude);
+                }
+
+                if(finish_location == null)
+                {
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Uzupełnij cel podróży",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+                    return null;
+                }
                 paramsJson.put("finish_lat", finish_location.latitude);
                 paramsJson.put("finish_lng", finish_location.longitude);
                 json.put("params", paramsJson);
@@ -329,7 +371,8 @@ public class MapActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String result)
         {
-
+            if (result == null)
+                return;
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("journey");
@@ -337,6 +380,13 @@ public class MapActivity extends AppCompatActivity implements
 
 
                 parents.clear();
+                if(jsonArray.length() < 1)
+                {
+                    Toast.makeText(getApplicationContext(),
+                            "Nie znaleziono żadnego przejazdu",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
 
                 String startTime="", finishTime="";
                 Date date;

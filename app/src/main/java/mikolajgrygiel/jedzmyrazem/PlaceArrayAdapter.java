@@ -90,12 +90,9 @@ public class PlaceArrayAdapter
             Collator plCollator = Collator.getInstance(new Locale("pl", "PL"));
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
-                String[] place_split =  prediction.getDescription().split(",");
-                if(plCollator.compare(place_split[place_split.length - 2].trim(), "Wroc³aw") == 1)
-                {
-                    resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
-                            place_split[0]));
-                }
+                resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
+                        prediction.getDescription()));
+
 
             }
             // Buffer release
