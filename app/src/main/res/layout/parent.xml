@@ -7,16 +7,16 @@
     android:layout_alignEnd="@+id/autoCompleteTextViewDst"
     android:visibility="visible"
     android:foregroundGravity="left"
-    android:gravity="left"
+    android:gravity="start"
     android:background="#d268737e">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Z:"
+        android:text="@string/from"
         android:id="@+id/textView"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -25,32 +25,33 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="start"
+        android:text="@string/startPlaceHolder"
         android:id="@+id/textViewStartPlace"
         android:textStyle="bold"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/textViewFinishPlace"
         android:layout_alignStart="@+id/textViewFinishPlace"
-        android:textSize="24dp" />
+        android:textSize="24sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="12:00"
+        android:text="@string/timePlaceHolder"
         android:id="@+id/textViewStartTime"
-        android:layout_alignParentTop="true"
-        android:layout_alignLeft="@+id/textViewFinishTime"
-        android:layout_alignStart="@+id/textViewFinishTime"
-        android:textSize="24dp" />
+        android:textSize="24sp"
+        android:layout_alignBaseline="@+id/textViewStartPlace"
+        android:layout_alignBottom="@+id/textViewStartPlace"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Do:"
+        android:text="@string/to"
         android:id="@+id/textViewTo"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:layout_below="@+id/textView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
@@ -59,48 +60,49 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="finish"
+        android:text="@string/finishPlaceHolder"
         android:id="@+id/textViewFinishPlace"
         android:layout_below="@+id/textViewStartPlace"
         android:layout_toRightOf="@+id/textViewTo"
         android:layout_toEndOf="@+id/textViewTo"
-        android:layout_marginLeft="5dp"
+        android:layout_marginEnd="5sp"
+        android:layout_marginRight="5sp"
         android:textStyle="bold"
-        android:textSize="24dp" />
+        android:textSize="24sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="13:00"
+        android:text="@string/timePlaceHolder"
         android:id="@+id/textViewFinishTime"
-        android:layout_below="@+id/textViewStartTime"
-        android:layout_toRightOf="@+id/textViewFinishPlace"
-        android:layout_toEndOf="@+id/textViewFinishPlace"
         android:focusableInTouchMode="false"
-        android:layout_marginLeft="5dp"
-        android:textSize="24dp" />
+        android:textSize="24sp"
+        android:layout_alignBaseline="@+id/textViewFinishPlace"
+        android:layout_alignBottom="@+id/textViewFinishPlace"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="0"
+        android:text="@string/zero"
         android:id="@+id/textViewPassesCount"
         android:layout_below="@+id/textViewFinishTime"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp" />
+        android:layout_marginRight="16sp"
+        android:layout_marginEnd="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Przesiadki:"
+        android:text="@string/passes"
         android:id="@+id/textViewPasses"
-        android:layout_marginRight="12dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginRight="12sp"
+        android:layout_marginEnd="12sp"
         android:layout_below="@+id/textViewFinishTime"
         android:layout_toLeftOf="@+id/textViewPassesCount"
         android:layout_toStartOf="@+id/textViewPassesCount" />

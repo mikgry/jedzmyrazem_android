@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:hint="Moja lokalizacja"/>
+        android:hint="@string/my_localization"/>
 
     <AutoCompleteTextView
         android:id="@+id/autoCompleteTextViewDst"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:hint="Cel podróży"
+        android:hint="@string/journey_destination"
         android:layout_below="@+id/autoCompleteTextViewSrc"/>
 
     <TextView
@@ -31,7 +31,8 @@
         android:layout_height="wrap_content"
         android:onClick="setDate"
         android:layout_alignParentLeft="true"
-        android:textSize="24dp"
+        android:layout_alignParentStart="true"
+        android:textSize="24sp"
         android:clickable="true"
         android:layout_below="@+id/autoCompleteTextViewDst"/>
 
@@ -39,21 +40,23 @@
         android:id="@+id/textViewTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="24dp"
+        android:textSize="24sp"
         android:onClick="setTime"
         android:clickable="true"
         android:layout_below="@+id/autoCompleteTextViewDst"
-        android:layout_alignRight="@+id/buttonSearch" />
+        android:layout_alignRight="@+id/buttonSearch"
+        android:layout_alignEnd="@+id/buttonSearch"/>
 
     <Button
         android:id="@+id/buttonSearch"
         android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="search"
         android:layout_below="@+id/textViewTime"
         android:layout_marginTop="20dp"
-        android:hint="Szukaj"/>
+        android:hint="@string/search"/>
 
 
     <TextView
@@ -70,7 +73,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/powered_by_google_light"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/powerdby_image_description"/>
 
     <LinearLayout
         android:orientation="vertical"

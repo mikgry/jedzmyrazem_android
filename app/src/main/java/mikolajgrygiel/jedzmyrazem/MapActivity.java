@@ -44,6 +44,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import mikolajgrygiel.jedzmyrazem.enums.RestApiUrl;
 
@@ -55,7 +56,6 @@ public class MapActivity extends AppCompatActivity implements
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private AutoCompleteTextView mAutocompleteTextViewSrc;
     private AutoCompleteTextView mAutocompleteTextViewDst;
-    private ScrollView mScrollView;
     private TextView mTextViewDate;
     private TextView mTextViewTime;
     private TextView mAttTextView;
@@ -121,8 +121,6 @@ public class MapActivity extends AppCompatActivity implements
         mTextViewTime = (TextView) findViewById(R.id
                 .textViewTime);
         showTime(hour, minute);
-
-        mScrollView = (ScrollView) findViewById(R.id.scrollView);
 
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
@@ -390,7 +388,7 @@ public class MapActivity extends AppCompatActivity implements
 
                 String startTime="", finishTime="";
                 Date date;
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
                 for(int i=0; i<jsonArray.length(); i++){
                     JSONArray journey = jsonArray.getJSONArray(i);
                     JSONObject start = journey.getJSONObject(0).getJSONArray("waypoints").getJSONObject(0);
@@ -400,10 +398,10 @@ public class MapActivity extends AppCompatActivity implements
                     try {
 
                         date = sdf.parse(start.getString("time"));
-                        startTime = new SimpleDateFormat("HH:mm").format(date);
+                        startTime = new SimpleDateFormat("HH:mm", Locale.US).format(date);
 
                         date = sdf.parse(finish.getString("time"));
-                        finishTime = new SimpleDateFormat("HH:mm").format(date);
+                        finishTime = new SimpleDateFormat("HH:mm", Locale.US).format(date);
 
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -427,10 +425,10 @@ public class MapActivity extends AppCompatActivity implements
                         try {
 
                             date = sdf.parse(start.getString("time"));
-                            startTime = new SimpleDateFormat("HH:mm").format(date);
+                            startTime = new SimpleDateFormat("HH:mm", Locale.US).format(date);
 
                             date = sdf.parse(finish.getString("time"));
-                            finishTime = new SimpleDateFormat("HH:mm").format(date);
+                            finishTime = new SimpleDateFormat("HH:mm", Locale.US).format(date);
 
                         } catch (ParseException e) {
                             e.printStackTrace();

@@ -76,7 +76,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         super.onCreate(savedInstanceState);
 
         pref = getSharedPreferences("userdetails", MODE_PRIVATE);
-        editor = pref.edit();
 
         String getStatus = pref.getString("logged", "");
         if(getStatus.equals("true")){
@@ -340,8 +339,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             showProgress(false);
 
             if (success) {
-                editor.putString("logged", "true");
-                editor.commit();
+                editor = pref.edit();
+                editor.putString("logged", "true").apply();
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

@@ -74,8 +74,8 @@ public class SaveUser {
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 if (jsonObject.has("username")){
-                    editor.putString("logged", "true");
-                    editor.commit();
+                    editor = pref.edit();
+                    editor.putString("logged", "true").apply();
                     Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.register_registeredOk), Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(activity, MapActivity.class);
                     activity.startActivity(intent);
@@ -100,7 +100,6 @@ public class SaveUser {
     public SaveUser(Activity activity, String username, String email, String phone, String password, String password_confirmation){
         this.activity = activity;
         pref = activity.getSharedPreferences("testapp", activity.MODE_PRIVATE);
-        editor = pref.edit();
         cookieStore = new PersistentCookieStore(activity);
         httpClient.setCookieStore(cookieStore);
         new Send().execute(username, email, phone, password, password_confirmation);
