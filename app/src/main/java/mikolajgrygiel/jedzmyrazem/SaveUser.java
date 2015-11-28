@@ -1,6 +1,7 @@
 package mikolajgrygiel.jedzmyrazem;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -59,9 +60,6 @@ public class SaveUser {
 
             Log.d("ANSWEAR SAVE_USER: ", jsonStr);
 
-
-            // close the RegisterActivity after saving is completed
-            RegistrationActivity.fa.finish();
             return jsonStr;
         }
 
@@ -99,7 +97,7 @@ public class SaveUser {
     //region Constructor & init
     public SaveUser(Activity activity, String username, String email, String phone, String password, String password_confirmation){
         this.activity = activity;
-        pref = activity.getSharedPreferences("testapp", activity.MODE_PRIVATE);
+        pref = activity.getSharedPreferences("testapp", Context.MODE_PRIVATE);
         cookieStore = new PersistentCookieStore(activity);
         httpClient.setCookieStore(cookieStore);
         new Send().execute(username, email, phone, password, password_confirmation);
@@ -110,7 +108,7 @@ public class SaveUser {
     //endregion
 
 
-    public static DefaultHttpClient httpClient = new DefaultHttpClient();
+    public final static DefaultHttpClient httpClient = new DefaultHttpClient();
     PersistentCookieStore cookieStore;
     SharedPreferences pref;
     SharedPreferences.Editor editor;

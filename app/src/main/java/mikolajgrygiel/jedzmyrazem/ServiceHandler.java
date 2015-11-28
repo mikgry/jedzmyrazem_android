@@ -17,7 +17,7 @@ import java.io.UnsupportedEncodingException;
 public class ServiceHandler {
 
     //region Properties
-    static String response = null;
+    private String response = null;
     public final static int GET = 1;
     public final static int POST = 2;
     public final static int DELETE = 3;
@@ -92,8 +92,13 @@ public class ServiceHandler {
                 httpDelete.setHeader("Content-type", "application/json");
                 httpResponse = LoginActivity.httpClient.execute(httpDelete);
             }
-            httpEntity = httpResponse.getEntity();
-            response = EntityUtils.toString(httpEntity);
+            try {
+                httpEntity = httpResponse.getEntity();
+                response = EntityUtils.toString(httpEntity);
+            }
+            catch (NullPointerException e){
+                e.printStackTrace();
+            }
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

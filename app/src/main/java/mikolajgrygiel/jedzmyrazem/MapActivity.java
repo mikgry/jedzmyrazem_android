@@ -125,7 +125,7 @@ public class MapActivity extends AppCompatActivity implements
         expListView = (ExpandableListView) findViewById(R.id.expandableListView);
 
         parents = new ArrayList<Parent>();
-        listAdapter = new MyExpandableListAdapter(this, parents, getApplicationContext());
+        listAdapter = new MyExpandableListAdapter(this, parents);
         expListView.setAdapter(listAdapter);
 
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);

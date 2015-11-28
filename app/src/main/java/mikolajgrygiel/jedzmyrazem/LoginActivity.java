@@ -330,6 +330,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             }
             Intent intent = new Intent(LoginActivity.this, MapActivity.class);
             startActivity(intent);
+            finish();
             return jsonObject != null;
         }
 

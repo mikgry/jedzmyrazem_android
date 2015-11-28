@@ -87,7 +87,6 @@ public class PlaceArrayAdapter
                     + " predictions.");
             Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
             ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
-            Collator plCollator = Collator.getInstance(new Locale("pl", "PL"));
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
                 resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
@@ -135,7 +134,7 @@ public class PlaceArrayAdapter
         return filter;
     }
 
-    class PlaceAutocomplete {
+    static class PlaceAutocomplete {
 
         public CharSequence placeId;
         public CharSequence description;

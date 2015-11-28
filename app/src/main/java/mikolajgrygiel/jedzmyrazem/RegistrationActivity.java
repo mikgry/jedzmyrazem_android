@@ -16,7 +16,7 @@ public class RegistrationActivity extends ActionBarActivity {
     Button btnRegister;
     Boolean dataValidated;
 
-    protected static Activity fa;
+    private Activity fa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

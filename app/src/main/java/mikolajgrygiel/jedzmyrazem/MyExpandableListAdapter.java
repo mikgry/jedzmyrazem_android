@@ -1,6 +1,5 @@
 package mikolajgrygiel.jedzmyrazem;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,17 +12,12 @@ import java.util.ArrayList;
 
 public class MyExpandableListAdapter extends BaseExpandableListAdapter
 {
-    private int ParentClickStatus=-1;
-    private int ChildClickStatus=-1;
-
     private LayoutInflater inflater;
     private ArrayList<Parent> parents;
-    private Context context;
 
-    public MyExpandableListAdapter(AppCompatActivity activity, ArrayList<Parent> parentsList, Context contextParrent)
+    public MyExpandableListAdapter(AppCompatActivity activity, ArrayList<Parent> parentsList)
     {
         // Create Layout Inflator
-        context = contextParrent;
         inflater = LayoutInflater.from(activity);
         parents = parentsList;
     }
@@ -86,14 +80,6 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter
     @Override
     public long getChildId(int groupPosition, int childPosition)
     {
-        /****** When Child row clicked then this function call *******/
-
-        //Log.i("Noise", "parent == "+groupPosition+"=  child : =="+childPosition);
-        if( ChildClickStatus!=childPosition)
-        {
-            ChildClickStatus = childPosition;
-        }
-
         return childPosition;
     }
 
