@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/scrollView"
+    android:layout_alignRight="@+id/autoCompleteTextViewDst"
+    android:layout_alignEnd="@+id/autoCompleteTextViewDst"
+    android:visibility="visible"
+    android:foregroundGravity="left"
+    android:gravity="left"
+    android:background="#e8c7d4ea">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="start"
+        android:id="@+id/textViewStartPlace"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/textViewFinishPlace"
+        android:layout_alignStart="@+id/textViewFinishPlace" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="12:00"
+        android:id="@+id/textViewStartTime"
+        android:textSize="24dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="11dp"
+        android:layout_marginEnd="11dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="finish"
+        android:id="@+id/textViewFinishPlace"
+        android:layout_marginLeft="27dp"
+        android:textStyle="bold"
+        android:textSize="24dp"
+        android:layout_below="@+id/textViewStartPlace"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="27dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="13:00"
+        android:id="@+id/textViewFinishTime"
+        android:focusableInTouchMode="false"
+        android:textSize="24dp"
+        android:layout_below="@+id/textViewStartTime"
+        android:layout_alignLeft="@+id/textViewStartTime"
+        android:layout_alignStart="@+id/textViewStartTime" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Kierowca:"
+        android:id="@+id/textViewDriverLabel"
+        android:layout_below="@+id/textViewFinishPlace"
+        android:layout_alignLeft="@+id/textViewFinishPlace"
+        android:layout_alignStart="@+id/textViewFinishPlace" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textViewSpacesLabel"
+        android:text="Miejsca:"
+        android:layout_below="@+id/textViewDriverLabel"
+        android:layout_alignLeft="@+id/textViewDriverLabel"
+        android:layout_alignStart="@+id/textViewDriverLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textViewSpaces"
+        android:text="1"
+        android:layout_alignTop="@+id/textViewSpacesLabel"
+        android:layout_toRightOf="@+id/textViewSpacesLabel"
+        android:layout_toEndOf="@+id/textViewSpacesLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="kierowca"
+        android:id="@+id/textViewDriverName"
+        android:layout_below="@+id/textViewFinishTime"
+        android:layout_centerHorizontal="true" />
+</RelativeLayout>

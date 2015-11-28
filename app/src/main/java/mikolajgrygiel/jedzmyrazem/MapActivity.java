@@ -3,6 +3,8 @@ package mikolajgrygiel.jedzmyrazem;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +14,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
+import android.widget.ExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -35,6 +38,7 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -61,6 +65,10 @@ public class MapActivity extends AppCompatActivity implements
     private Calendar calendar;
     private int year, month, day;
     private int hour, minute;
+
+    private ArrayList<Parent> parents;
+    ExpandableListAdapter listAdapter;
+    ExpandableListView expListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,14 +108,60 @@ public class MapActivity extends AppCompatActivity implements
 
         mTextViewDate = (TextView) findViewById(R.id
                 .textViewDate);
-        showDate(year, month, day);
+        showDate(year, month+1, day);
 
         mTextViewTime = (TextView) findViewById(R.id
                 .textViewTime);
         showTime(hour, minute);
 
         mScrollView = (ScrollView) findViewById(R.id.scrollView);
+
+        expListView = (ExpandableListView) findViewById(R.id.expandableListView);
+
+        parents = new ArrayList<Parent>();
+        listAdapter = new MyExpandableListAdapter(this, parents, getApplicationContext());
+        expListView.setAdapter(listAdapter);
+
+        //Creating static data in arraylist
+
+
     }
+
+    private ArrayList<Parent> buildDummyData()
+    {
+        // Creating ArrayList of type parent class to store parent class objects
+        final ArrayList<Parent> list = new ArrayList<Parent>();
+        for (int i = 1; i < 4; i++)
+        {
+            //Create parent class object
+            final Parent parent = new Parent();
+
+            parent.setStartPlace("ParentStart " + i);
+            parent.setStartTime("12:0" + i);
+            parent.setFinishPlace("ParentFinish " + i);
+            parent.setFinishTime("13:0" + i);
+            parent.setPasses(Integer.toString(i));
+
+            // Create Child class object
+            final Child child = new Child();
+            child.setStartPlace("ParentStart " + i);
+            child.setStartTime("12:0" + i);
+            child.setFinishPlace("ParentFinish " + i);
+            child.setFinishTime("13:0" + i);
+            child.setDriver("Driver " + i);
+            child.setSpaces(Integer.toString(i));
+
+            parent.setChildren(new ArrayList<Child>());
+            parent.getChildren().add(child);
+
+
+            list.add(parent);
+        }
+        return list;
+    }
+
+
+
 
     private AdapterView.OnItemClickListener mAutocompleteClickListenerStart
             = new AdapterView.OnItemClickListener() {
@@ -272,6 +326,7 @@ public class MapActivity extends AppCompatActivity implements
 
             return jsonStr;
         }
+        @Override
         protected void onPostExecute(String result)
         {
 
@@ -279,17 +334,19 @@ public class MapActivity extends AppCompatActivity implements
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("journey");
 
-                LinearLayout item = (LinearLayout)findViewById(R.id.linearLayout);
-                item.removeAllViews();
-                View child;
+
+
+                parents.clear();
+
                 String startTime="", finishTime="";
                 Date date;
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
                 for(int i=0; i<jsonArray.length(); i++){
                     JSONArray journey = jsonArray.getJSONArray(i);
                     JSONObject start = journey.getJSONObject(0).getJSONArray("waypoints").getJSONObject(0);
                     JSONObject finish = journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").getJSONObject(journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").length()-1);
 
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+
                     try {
 
                         date = sdf.parse(start.getString("time"));
@@ -304,20 +361,50 @@ public class MapActivity extends AppCompatActivity implements
 
 
 
-                    child = getLayoutInflater().inflate(R.layout.journey, null);
-                    ((TextView)child.findViewById(R.id.textViewPassesCount)).setText(Integer.toString(journey.length()-1));
-                    ((TextView)child.findViewById(R.id.textViewStartPlace)).setText(start.getString("name"));
-                    ((TextView)child.findViewById(R.id.textViewFinishPlace)).setText(finish.getString("name"));
+                    final Parent parent = new Parent();
 
-                    ((TextView)child.findViewById(R.id.textViewStartTime)).setText(startTime);
-                    ((TextView)child.findViewById(R.id.textViewFinishTime)).setText(finishTime);
-                    item.addView(child);
+                    parent.setStartPlace(start.getString("name"));
+                    parent.setStartTime(startTime);
+                    parent.setFinishPlace(finish.getString("name"));
+                    parent.setFinishTime(finishTime);
+                    parent.setPasses(Integer.toString(journey.length() - 1));
+                    parent.setChildren(new ArrayList<Child>());
+                    for(int j = 0; j < journey.length(); j++) {
+                        final Child child = new Child();
+                        start = journey.getJSONObject(j).getJSONArray("waypoints").getJSONObject(0);
+                        finish =journey.getJSONObject(j).getJSONArray("waypoints").getJSONObject(journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").length()-1);
+
+                        try {
+
+                            date = sdf.parse(start.getString("time"));
+                            startTime = new SimpleDateFormat("HH:mm").format(date);
+
+                            date = sdf.parse(finish.getString("time"));
+                            finishTime = new SimpleDateFormat("HH:mm").format(date);
+
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        child.setStartPlace(start.getString("name"));
+                        child.setFinishPlace(finish.getString("name"));
+
+                        child.setStartTime(startTime);
+
+                        child.setFinishTime(finishTime);
+                        child.setDriver(journey.getJSONObject(j).getString("user"));
+                        child.setSpaces(journey.getJSONObject(j).getString("spaces"));
+                        parent.getChildren().add(child);
+                    }
+
+                    parents.add(parent);
+
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
+            ((MyExpandableListAdapter)expListView.getExpandableListAdapter()).notifyDataSetChanged();
         }
     }
 }

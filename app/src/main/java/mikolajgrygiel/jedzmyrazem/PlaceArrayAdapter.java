@@ -91,8 +91,6 @@ public class PlaceArrayAdapter
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
                 String[] place_split =  prediction.getDescription().split(",");
-                int a = plCollator.compare(place_split[place_split.length - 2].trim(), "Wroc³aw");
-                int b = plCollator.compare(place_split[place_split.length - 2], " Wroc³aw");
                 if(plCollator.compare(place_split[place_split.length - 2].trim(), "Wroc³aw") == 1)
                 {
                     resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),

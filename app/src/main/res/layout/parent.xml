@@ -7,7 +7,8 @@
     android:layout_alignEnd="@+id/autoCompleteTextViewDst"
     android:visibility="visible"
     android:foregroundGravity="left"
-    android:gravity="left">
+    android:gravity="left"
+    android:background="#d268737e">
 
     <TextView
         android:layout_width="wrap_content"
