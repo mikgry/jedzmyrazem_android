@@ -79,7 +79,8 @@
         android:text="@string/spaces"
         android:layout_below="@+id/textViewDriverLabel"
         android:layout_alignLeft="@+id/textViewDriverLabel"
-        android:layout_alignStart="@+id/textViewDriverLabel" />
+        android:layout_alignStart="@+id/textViewDriverLabel"
+        android:layout_marginTop="29dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -98,5 +99,26 @@
         android:text="@string/driverPlaceHolder"
         android:id="@+id/textViewDriverName"
         android:layout_below="@+id/textViewFinishTime"
-        android:layout_centerHorizontal="true" />
+        android:layout_toRightOf="@+id/textViewDriverLabel"
+        android:layout_toEndOf="@+id/textViewDriverLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textViewPhoneLabel"
+        android:text="@string/phone"
+        android:layout_above="@+id/textViewSpaces"
+        android:layout_alignLeft="@+id/textViewDriverLabel"
+        android:layout_alignStart="@+id/textViewDriverLabel" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:id="@+id/textViewPhone"
+        android:text="@string/phonePlaceholder"
+        android:layout_above="@+id/textViewSpaces"
+        android:layout_toRightOf="@+id/textViewPhoneLabel"
+        android:layout_toEndOf="@+id/textViewPhoneLabel" />
 </RelativeLayout>

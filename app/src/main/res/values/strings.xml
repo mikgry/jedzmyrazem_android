@@ -35,5 +35,7 @@
     //child view
     <string name="driver">Kierowca:</string>
     <string name="driverPlaceHolder">Jan Kowalski</string>
+    <string name="phone">tel.</string>
+    <string name="phonePlaceholder">111222333</string>
     <string name="spaces">Miejsca:</string>
 </resources>

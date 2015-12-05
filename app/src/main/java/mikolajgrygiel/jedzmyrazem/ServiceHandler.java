@@ -6,12 +6,16 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.util.Iterator;
 
 
 public class ServiceHandler {
@@ -40,7 +44,7 @@ public class ServiceHandler {
      * @method - http request method
      * */
     public String makeServiceCall(String url, int method) {
-        return this.makeServiceCall(url, method, null);
+        return this.makeServiceCall(url, method, null, null);
     }
 
     /**
@@ -52,7 +56,7 @@ public class ServiceHandler {
 
 
     public String makeServiceCall(String url, int method,
-                                  JSONObject params) {
+                                  JSONObject params, String paramsString) {
         try {
             // http client
 
@@ -74,15 +78,10 @@ public class ServiceHandler {
 
                 httpResponse = LoginActivity.httpClient.execute(httpPost);
             } else if (method == GET) {
-                // appending params to url
-                /*
-                if (params != null) {
-                    String paramString = URLEncodedUtils
-                            .format(params, "utf-8");
-                    url += "?" + paramString;
+                if (paramsString != null) {
+                    url += "?" + paramsString;
                 }
-                */
-                HttpGet httpGet = new HttpGet(url);
+                HttpGet httpGet = new HttpGet(String.valueOf(new URL(url)));
                 httpGet.setHeader("Accept", "application/json");
                 httpGet.setHeader("Content-type", "application/json");
                 httpResponse = LoginActivity.httpClient.execute(httpGet);

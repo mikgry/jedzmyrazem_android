@@ -6,7 +6,7 @@ package mikolajgrygiel.jedzmyrazem.enums;
 public enum RestApiUrl {
     SIGN_IN("users/sign_in.json"),
     SIGN_UP("users.json"),
-    SEARCH("journeys/search.json");
+    SEARCH("journeys.json");
 
     private final String url;
     private final String BASE_URL = "http://www.jedzmyrazem.pl/";

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.LoaderManager.LoaderCallbacks;
-import android.content.ContentResolver;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -79,7 +78,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
 
         String getStatus = pref.getString("logged", "");
         if(getStatus.equals("true")){
-            Intent intent = new Intent(this, MapActivity.class);
+            Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
         }
 
@@ -310,7 +309,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            String jsonStr = sh.makeServiceCall(RestApiUrl.SIGN_IN.getUrl(), ServiceHandler.POST, json);
+            String jsonStr = sh.makeServiceCall(RestApiUrl.SIGN_IN.getUrl(), ServiceHandler.POST, json, null);
             Log.d("JSON-TEST LOGIN: ", jsonStr);
 
             JSONObject jsonObject = null;
@@ -328,7 +327,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            Intent intent = new Intent(LoginActivity.this, MapActivity.class);
+            Intent intent = new Intent(LoginActivity.this, SearchActivity.class);
             startActivity(intent);
             finish();
             return jsonObject != null;

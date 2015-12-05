@@ -63,6 +63,7 @@ public class MyExpandableListAdapter extends BaseExpandableListAdapter
         ((TextView) convertView.findViewById(R.id.textViewStartTime)).setText(child.getStartTime());
         ((TextView) convertView.findViewById(R.id.textViewFinishTime)).setText(child.getFinishTime());
         ((TextView) convertView.findViewById(R.id.textViewDriverName)).setText(child.getDriver());
+        ((TextView) convertView.findViewById(R.id.textViewPhone)).setText(child.getPhone());
         ((TextView) convertView.findViewById(R.id.textViewSpaces)).setText(child.getSpaces());
 
         return convertView;

@@ -56,7 +56,7 @@ public class SaveUser {
                 e.printStackTrace();
             }
             // Making a request to url and getting response
-            String jsonStr = sh.makeServiceCall(RestApiUrl.SIGN_UP.getUrl(), ServiceHandler.POST, json);
+            String jsonStr = sh.makeServiceCall(RestApiUrl.SIGN_UP.getUrl(), ServiceHandler.POST, json, null);
 
             Log.d("ANSWEAR SAVE_USER: ", jsonStr);
 
@@ -75,7 +75,7 @@ public class SaveUser {
                     editor = pref.edit();
                     editor.putString("logged", "true").apply();
                     Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.register_registeredOk), Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(activity, MapActivity.class);
+                    Intent intent = new Intent(activity, SearchActivity.class);
                     activity.startActivity(intent);
                 } else {
                     Toast.makeText(activity.getApplicationContext(), activity.getResources().getString(R.string.register_registeredNotOk), Toast.LENGTH_LONG).show();

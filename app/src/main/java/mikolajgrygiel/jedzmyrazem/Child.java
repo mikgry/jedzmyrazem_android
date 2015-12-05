@@ -7,11 +7,22 @@ public class Child
     private String finishPlace;
     private String finishTime;
     private String driver;
+    private String phone;
     private String spaces;
 
     public String getStartPlace()
     {
         return startPlace;
+    }
+
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getPhone()
+    {
+        return phone;
     }
 
 
