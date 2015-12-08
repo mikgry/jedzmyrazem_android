@@ -22,7 +22,7 @@
         android:layout_alignParentStart="true" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/startPlaceHolder"
@@ -31,7 +31,10 @@
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/textViewFinishPlace"
         android:layout_alignStart="@+id/textViewFinishPlace"
-        android:textSize="24sp" />
+        android:textSize="24sp"
+        android:singleLine="false"
+        android:layout_toStartOf="@+id/textViewStartTime"
+        android:layout_marginRight="3sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -66,7 +69,7 @@
         android:layout_toRightOf="@+id/textViewTo"
         android:layout_toEndOf="@+id/textViewTo"
         android:layout_marginEnd="5sp"
-        android:layout_marginRight="5sp"
+        android:layout_marginRight="3sp"
         android:textStyle="bold"
         android:textSize="24sp" />
 

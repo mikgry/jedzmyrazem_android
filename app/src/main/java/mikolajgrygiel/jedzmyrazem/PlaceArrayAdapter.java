@@ -16,10 +16,8 @@ import com.google.android.gms.location.places.AutocompletePredictionBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class PlaceArrayAdapter

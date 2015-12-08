@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -305,8 +306,24 @@ public class SearchActivity extends AppCompatActivity implements
 
     public void search(View view)
     {
+        String start_lat, start_lng;
+        if(start_location == null || mAutocompleteTextViewSrc.getText().toString().equals("")) {
+            Location loc = gps.getLocation();
+            if (gps.isGPSEnabled) {
+                start_lat = Double.toString(loc.getLatitude());
+                start_lng = Double.toString(loc.getLongitude());
+            } else {
+                gps.showSettingsAlert();
+                return;
+            }
+        }
+        else
+        {
+            start_lat = Double.toString(start_location.latitude);
+            start_lng = Double.toString(start_location.longitude);
+        }
         SearchTask st = new SearchTask();
-        st.execute(mTextViewDate.getText().toString(), mTextViewTime.getText().toString());
+        st.execute(mTextViewDate.getText().toString(), mTextViewTime.getText().toString(), start_lat, start_lng);
     }
 
     private class SearchTask extends AsyncTask<String, String, String> {
@@ -315,26 +332,8 @@ public class SearchActivity extends AppCompatActivity implements
             String parameters = "";
                 parameters += "date" + "=" + params[0] + "&";
                 parameters += "start_time" + "=" + params[1] + "&";
-                if(start_location == null) {
-                    gps.getLocation();
-                    if (gps.isGPSEnabled) {
-                        parameters += "start_lat" + "=" + gps.getLatitude() + "&";
-                        parameters += "start_lng" + "=" + gps.getLongitude() + "&";
-                    } else {
-
-                        activity.runOnUiThread(new Runnable() {
-                            public void run() {
-                                gps.showSettingsAlert();
-                            }
-                        });
-                        return null;
-                    }
-                }
-                else
-                {
-                    parameters += "start_lat" + "=" + start_location.latitude + "&";
-                    parameters += "start_lng" + "=" + start_location.longitude + "&";
-                }
+                parameters += "start_lat" + "=" + params[2] + "&";
+                parameters += "start_lng" + "=" + params[3] + "&";
 
                 if(finish_location == null)
                 {
@@ -357,15 +356,13 @@ public class SearchActivity extends AppCompatActivity implements
         @Override
         protected void onPostExecute(String result)
         {
+            parents.clear();
+            ((MyExpandableListAdapter)expListView.getExpandableListAdapter()).notifyDataSetChanged();
             if (result == null)
                 return;
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 JSONArray jsonArray = jsonObject.getJSONArray("journey");
-
-
-
-                parents.clear();
                 expListView.requestFocus();
                 View view = activity.getCurrentFocus();
                 if (view != null) {
@@ -387,8 +384,6 @@ public class SearchActivity extends AppCompatActivity implements
                     JSONArray journey = jsonArray.getJSONArray(i);
                     JSONObject start = journey.getJSONObject(0).getJSONArray("waypoints").getJSONObject(0);
                     JSONObject finish = journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").getJSONObject(journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").length()-1);
-
-
                     try {
 
                         date = sdf.parse(start.getString("time"));
@@ -400,10 +395,7 @@ public class SearchActivity extends AppCompatActivity implements
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-
-
-
-                    final Parent parent = new Parent();
+                final Parent parent = new Parent();
 
                     parent.setStartPlace(start.getString("name"));
                     parent.setStartTime(startTime);

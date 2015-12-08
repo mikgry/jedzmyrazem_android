@@ -83,10 +83,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         }
 
         setContentView(R.layout.activity_login);
-
-
-
-        // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
 
@@ -320,8 +316,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                     return false;
                 }
 
-
-
                 Log.d("JSON-TEST LOGIN: ", "!hasError");
                 Log.d(jsonObject.toString(), "!hasError");
             } catch (JSONException e) {
@@ -346,12 +340,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
         }
     }
     public final static DefaultHttpClient httpClient = new DefaultHttpClient();
