@@ -85,6 +85,12 @@ public class RegistrationActivity extends ActionBarActivity {
                 }
 
 
+                if (txtPhone.getText().toString().length() < 9 || !txtPhone.getText().toString().matches("[0-9]+")) {
+                    txtPhone.setError(getResources().getString(R.string.phoneValidation));
+                    dataValidated = false;
+                }
+
+
                 if (dataValidated) {
                     String username = txtUsername.getText().toString();
                     String email = txtEmail.getText().toString();
@@ -94,8 +100,6 @@ public class RegistrationActivity extends ActionBarActivity {
 
 
                     new SaveUser(fa, username, email, phone, password, password_confirmation);
-
-
                 }
 
             }

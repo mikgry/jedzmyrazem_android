@@ -8,6 +8,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -309,7 +310,7 @@ public class SearchActivity extends AppCompatActivity implements
         String start_lat, start_lng;
         if(start_location == null || mAutocompleteTextViewSrc.getText().toString().equals("")) {
             Location loc = gps.getLocation();
-            if (gps.isGPSEnabled) {
+            if (gps.isGPSEnabled()) {
                 start_lat = Double.toString(loc.getLatitude());
                 start_lng = Double.toString(loc.getLongitude());
             } else {
@@ -329,30 +330,38 @@ public class SearchActivity extends AppCompatActivity implements
     private class SearchTask extends AsyncTask<String, String, String> {
         @Override
         protected String doInBackground(String... params) {
-            String parameters = "";
-                parameters += "date" + "=" + params[0] + "&";
-                parameters += "start_time" + "=" + params[1] + "&";
-                parameters += "start_lat" + "=" + params[2] + "&";
-                parameters += "start_lng" + "=" + params[3] + "&";
-
-                if(finish_location == null)
-                {
-                    activity.runOnUiThread(new Runnable() {
-                        public void run() {
-                            Toast.makeText(getApplicationContext(),
-                                    "Uzupełnij cel podróży",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
-                    return null;
-                }
-                parameters += "finish_lat" + "=" + finish_location.latitude + "&";
-                parameters += "finish_lng" + "=" + finish_location.longitude;
+            String parameters = prepareStringParameters(params);
+            if (parameters == null) return null;
             ServiceHandler sh = new ServiceHandler();
             String jsonStr = sh.makeServiceCall(RestApiUrl.SEARCH.getUrl(), ServiceHandler.GET, null, parameters);
 
             return jsonStr;
         }
+
+        @Nullable
+        private String prepareStringParameters(String[] params) {
+            String parameters = "";
+            parameters += "date" + "=" + params[0] + "&";
+            parameters += "start_time" + "=" + params[1] + "&";
+            parameters += "start_lat" + "=" + params[2] + "&";
+            parameters += "start_lng" + "=" + params[3] + "&";
+
+            if(finish_location == null)
+            {
+                activity.runOnUiThread(new Runnable() {
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Uzupełnij cel podróży",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+                return null;
+            }
+            parameters += "finish_lat" + "=" + finish_location.latitude + "&";
+            parameters += "finish_lng" + "=" + finish_location.longitude;
+            return parameters;
+        }
+
         @Override
         protected void onPostExecute(String result)
         {
@@ -361,29 +370,61 @@ public class SearchActivity extends AppCompatActivity implements
             if (result == null)
                 return;
             try {
-                JSONObject jsonObject = new JSONObject(result);
-                JSONArray jsonArray = jsonObject.getJSONArray("journey");
-                expListView.requestFocus();
-                View view = activity.getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-                if(jsonArray.length() < 1)
-                {
-                    Toast.makeText(getApplicationContext(),
-                            "Nie znaleziono żadnego przejazdu",
-                            Toast.LENGTH_LONG).show();
-                    return;
-                }
+                if (parseResponse(result)) return;
+                ((MyExpandableListAdapter)expListView.getExpandableListAdapter()).notifyDataSetChanged();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
 
-                String startTime="", finishTime="";
-                Date date;
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
-                for(int i=0; i<jsonArray.length(); i++){
-                    JSONArray journey = jsonArray.getJSONArray(i);
-                    JSONObject start = journey.getJSONObject(0).getJSONArray("waypoints").getJSONObject(0);
-                    JSONObject finish = journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").getJSONObject(journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").length()-1);
+        private boolean parseResponse(String result) throws JSONException {
+            JSONObject jsonObject = new JSONObject(result);
+            JSONArray jsonArray = jsonObject.getJSONArray("journey");
+            expListView.requestFocus();
+            View view = activity.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+            if(jsonArray.length() < 1)
+            {
+                Toast.makeText(getApplicationContext(),
+                        "Nie znaleziono żadnego przejazdu",
+                        Toast.LENGTH_LONG).show();
+                return true;
+            }
+
+            String startTime="", finishTime="";
+            Date date;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
+            for(int i=0; i<jsonArray.length(); i++){
+                JSONArray journey = jsonArray.getJSONArray(i);
+                JSONObject start = journey.getJSONObject(0).getJSONArray("waypoints").getJSONObject(0);
+                JSONObject finish = journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").getJSONObject(journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").length()-1);
+                try {
+
+                    date = sdf.parse(start.getString("time"));
+                    startTime = new SimpleDateFormat("HH:mm", Locale.US).format(date);
+
+                    date = sdf.parse(finish.getString("time"));
+                    finishTime = new SimpleDateFormat("HH:mm", Locale.US).format(date);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            final Parent parent = new Parent();
+
+                parent.setStartPlace(start.getString("name"));
+                parent.setStartTime(startTime);
+                parent.setFinishPlace(finish.getString("name"));
+                parent.setFinishTime(finishTime);
+                parent.setPasses(Integer.toString(journey.length() - 1));
+                parent.setChildren(new ArrayList<Child>());
+                for(int j = 0; j < journey.length(); j++) {
+                    final Child child = new Child();
+                    start = journey.getJSONObject(j).getJSONArray("waypoints").getJSONObject(0);
+                    finish =journey.getJSONObject(j).getJSONArray("waypoints").getJSONObject(journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").length()-1);
+
                     try {
 
                         date = sdf.parse(start.getString("time"));
@@ -395,52 +436,23 @@ public class SearchActivity extends AppCompatActivity implements
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                final Parent parent = new Parent();
-
-                    parent.setStartPlace(start.getString("name"));
-                    parent.setStartTime(startTime);
-                    parent.setFinishPlace(finish.getString("name"));
-                    parent.setFinishTime(finishTime);
-                    parent.setPasses(Integer.toString(journey.length() - 1));
-                    parent.setChildren(new ArrayList<Child>());
-                    for(int j = 0; j < journey.length(); j++) {
-                        final Child child = new Child();
-                        start = journey.getJSONObject(j).getJSONArray("waypoints").getJSONObject(0);
-                        finish =journey.getJSONObject(j).getJSONArray("waypoints").getJSONObject(journey.getJSONObject(journey.length()-1).getJSONArray("waypoints").length()-1);
-
-                        try {
-
-                            date = sdf.parse(start.getString("time"));
-                            startTime = new SimpleDateFormat("HH:mm", Locale.US).format(date);
-
-                            date = sdf.parse(finish.getString("time"));
-                            finishTime = new SimpleDateFormat("HH:mm", Locale.US).format(date);
-
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
 
 
-                        child.setStartPlace(start.getString("name"));
-                        child.setFinishPlace(finish.getString("name"));
+                    child.setStartPlace(start.getString("name"));
+                    child.setFinishPlace(finish.getString("name"));
 
-                        child.setStartTime(startTime);
+                    child.setStartTime(startTime);
 
-                        child.setFinishTime(finishTime);
-                        JSONObject driver = journey.getJSONObject(j).getJSONObject("user");
-                        child.setDriver(driver.getString("username"));
-                        child.setPhone(driver.getString("phone"));
-                        child.setSpaces(journey.getJSONObject(j).getString("spaces"));
-                        parent.getChildren().add(child);
-                    }
-
-                    parents.add(parent);
-
+                    child.setFinishTime(finishTime);
+                    JSONObject driver = journey.getJSONObject(j).getJSONObject("user");
+                    child.setDriver(driver.getString("username"));
+                    child.setPhone(driver.getString("phone"));
+                    child.setSpaces(journey.getJSONObject(j).getString("spaces"));
+                    parent.getChildren().add(child);
                 }
-            } catch (JSONException e) {
-                e.printStackTrace();
+                parents.add(parent);
             }
-            ((MyExpandableListAdapter)expListView.getExpandableListAdapter()).notifyDataSetChanged();
+            return false;
         }
     }
 }

@@ -17,6 +17,8 @@
     <string name="registrationValidation_emailFormatIncorrect">Email został podany w niepoprawnym formacie. Powinien być: name@example.com</string>
     <string name="registrationValidation_passwordAtLeastEightCharacters">Hasło musi skadać się z co najmniej 8 znaków.</string>
 
+    <string name="phoneValidation">Numer telefonu musi składać się z 9 cyfr.</string>
+
     //Map activity
     <string name="my_localization">Moja lokalizacja</string>
     <string name="journey_destination">Cel podróży</string>

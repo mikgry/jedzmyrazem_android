@@ -1,6 +1,7 @@
 package mikolajgrygiel.jedzmyrazem;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
@@ -63,41 +64,32 @@ public class PlaceArrayAdapter
 
     private ArrayList<PlaceAutocomplete> getPredictions(CharSequence constraint) {
         if (mGoogleApiClient != null) {
-            Log.i(TAG, "Executing autocomplete query for: " + constraint);
             PendingResult<AutocompletePredictionBuffer> results =
-                    Places.GeoDataApi
-                            .getAutocompletePredictions(mGoogleApiClient, constraint.toString(),
-                                    mBounds, mPlaceFilter);
-            // Wait for predictions, set the timeout.
-            AutocompletePredictionBuffer autocompletePredictions = results
-                    .await(60, TimeUnit.SECONDS);
+                    Places.GeoDataApi.getAutocompletePredictions(mGoogleApiClient, constraint.toString(), mBounds, mPlaceFilter);
+            AutocompletePredictionBuffer autocompletePredictions = results.await(60, TimeUnit.SECONDS);
             final Status status = autocompletePredictions.getStatus();
             if (!status.isSuccess()) {
-                Toast.makeText(getContext(), "Error: " + status.toString(),
-                        Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Error getting place predictions: " + status
-                        .toString());
+                Toast.makeText(getContext(), "Error: " + status.toString(), Toast.LENGTH_SHORT).show();
                 autocompletePredictions.release();
                 return null;
             }
-
-            Log.i(TAG, "Query completed. Received " + autocompletePredictions.getCount()
-                    + " predictions.");
-            Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
-            ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
-            while (iterator.hasNext()) {
-                AutocompletePrediction prediction = iterator.next();
-                resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
-                        prediction.getDescription()));
-
-
-            }
-            // Buffer release
+            ArrayList resultList = formatArrayList(autocompletePredictions);
             autocompletePredictions.release();
             return resultList;
         }
-        Log.e(TAG, "Google API client is not connected.");
         return null;
+    }
+
+    @NonNull
+    private ArrayList formatArrayList(AutocompletePredictionBuffer autocompletePredictions) {
+        Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
+        ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
+        while (iterator.hasNext()) {
+            AutocompletePrediction prediction = iterator.next();
+            resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),
+                    prediction.getDescription()));
+        }
+        return resultList;
     }
 
     @Override
