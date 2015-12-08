@@ -14,13 +14,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="@string/startPlaceHolder"
+        android:text="gdsg sdgdf dsffg dsffg dsfg sdfg dsfg dsfg sdfg "
         android:id="@+id/textViewStartPlace"
         android:textStyle="bold"
         android:textSize="24sp"
         android:layout_alignParentTop="true"
         android:layout_alignLeft="@+id/textViewFinishPlace"
-        android:layout_alignStart="@+id/textViewFinishPlace" />
+        android:layout_alignStart="@+id/textViewFinishPlace"
+        android:ellipsize="middle"
+        android:layout_toRightOf="@+id/textViewStartTime"
+        android:layout_toStartOf="@id/textViewStartTime"
+        android:gravity="left"
+        android:maxWidth="200sp"
+        android:layout_marginRight="3sp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -57,9 +63,8 @@
         android:id="@+id/textViewFinishTime"
         android:focusableInTouchMode="false"
         android:textSize="24sp"
-        android:layout_below="@+id/textViewStartTime"
-        android:layout_alignLeft="@+id/textViewStartTime"
-        android:layout_alignStart="@+id/textViewStartTime" />
+        android:layout_below="@+id/textViewStartPlace"
+        android:layout_alignLeft="@+id/textViewStartTime" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -98,7 +103,8 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="@string/driverPlaceHolder"
         android:id="@+id/textViewDriverName"
-        android:layout_below="@+id/textViewFinishTime"
+        android:layout_alignBaseline="@+id/textViewDriverLabel"
+        android:layout_alignBottom="@+id/textViewDriverLabel"
         android:layout_toRightOf="@+id/textViewDriverLabel"
         android:layout_toEndOf="@+id/textViewDriverLabel" />
 
