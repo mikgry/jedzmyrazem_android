@@ -80,6 +80,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         if(getStatus.equals("true")){
             Intent intent = new Intent(this, SearchActivity.class);
             startActivity(intent);
+            finish();
         }
 
         setContentView(R.layout.activity_login);

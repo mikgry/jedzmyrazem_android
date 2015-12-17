@@ -52,14 +52,14 @@ public class SearchActivity extends AppCompatActivity implements
         GoogleApiClient.ConnectionCallbacks {
     private static final String LOG_TAG = "SearchActivity";
     private static final int GOOGLE_API_CLIENT_ID = 0;
-    private AutoCompleteTextView mAutocompleteTextViewSrc;
+    public AutoCompleteTextView mAutocompleteTextViewSrc;
     private AutoCompleteTextView mAutocompleteTextViewDst;
     private TextView mTextViewDate;
     private TextView mTextViewTime;
     private TextView mAttTextView;
     private GoogleApiClient mGoogleApiClient;
     private PlaceArrayAdapter mPlaceArrayAdapter;
-    private LatLng start_location, finish_location;
+    public LatLng start_location, finish_location;
     private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
             new LatLng(51.043317, 16.803714), new LatLng(51.219122, 17.199909));
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; // 10 meters
@@ -132,41 +132,6 @@ public class SearchActivity extends AppCompatActivity implements
         start_location = null;
         gps = new GPSTracker(activity);
     }
-
-    private ArrayList<Parent> buildDummyData()
-    {
-        // Creating ArrayList of type parent class to store parent class objects
-        final ArrayList<Parent> list = new ArrayList<Parent>();
-        for (int i = 1; i < 4; i++)
-        {
-            //Create parent class object
-            final Parent parent = new Parent();
-
-            parent.setStartPlace("ParentStart " + i);
-            parent.setStartTime("12:0" + i);
-            parent.setFinishPlace("ParentFinish " + i);
-            parent.setFinishTime("13:0" + i);
-            parent.setPasses(Integer.toString(i));
-
-            // Create Child class object
-            final Child child = new Child();
-            child.setStartPlace("ParentStart " + i);
-            child.setStartTime("12:0" + i);
-            child.setFinishPlace("ParentFinish " + i);
-            child.setFinishTime("13:0" + i);
-            child.setDriver("Driver " + i);
-            child.setSpaces(Integer.toString(i));
-
-            parent.setChildren(new ArrayList<Child>());
-            parent.getChildren().add(child);
-
-
-            list.add(parent);
-        }
-        return list;
-    }
-
-
 
 
     private AdapterView.OnItemClickListener mAutocompleteClickListenerStart

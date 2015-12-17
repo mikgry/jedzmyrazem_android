@@ -30,6 +30,7 @@ public class RegistrationActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(RegistrationActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

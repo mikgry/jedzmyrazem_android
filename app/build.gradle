@@ -55,13 +55,14 @@ task findbugs(type: FindBugs) {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.6'
-    testCompile('org.robolectric:robolectric:3.0-rc2') {
-        exclude group: 'commons-logging', module: 'commons-logging'
-        exclude group: 'org.apache.httpcomponents', module: 'httpclient'
-    }
+    testCompile('org.robolectric:robolectric:3.0')
     compile 'com.android.support:appcompat-v7:22.2.1'
-    compile 'com.google.android.gms:play-services:7.8.0'
+    compile 'com.google.android.gms:play-services:8.1.0'
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile "org.robolectric:shadows-play-services:3.0"
+    testCompile "org.robolectric:shadows-multidex:3.0"
+    testCompile 'org.robolectric:shadows-maps:3.0'
+    testCompile "org.robolectric:shadows-support-v4:3.0"
 }
 
 jacoco {
